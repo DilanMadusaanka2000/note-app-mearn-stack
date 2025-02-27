@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 
 import axios from 'axios';
+import { useNavigate } from 'react-router-dom';
 
 function Signup() {
  
@@ -8,6 +9,7 @@ function Signup() {
   const[name, setName] = useState();
   const [email, setEmail] = useState();
   const[password, setPassword] = useState();
+  const navigate =  useNavigate();
    
 
   //form sybmit handler
@@ -17,7 +19,7 @@ function Signup() {
 
         try {
 
-          const response = await axios.post('http://localhost:5000/api/auth/signup', {
+          const response = await axios.post('http://localhost:8800/api/auth/register', {
             name,
             email,
             password
@@ -25,6 +27,9 @@ function Signup() {
 
              console.log(response);
              alert('User registered successfully');
+
+             navigate('/login');
+
           
         } catch (error) {
 

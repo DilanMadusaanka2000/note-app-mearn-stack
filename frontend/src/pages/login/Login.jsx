@@ -1,6 +1,8 @@
-import React, { useState, useNavigate } from 'react';
+import React, { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 
 import axios from 'axios';
+import { useAuth } from '../../context/ContextProvider';
 
 function Login() {
  
@@ -8,6 +10,8 @@ function Login() {
   const [email, setEmail] = useState();
   const[password, setPassword] = useState();
   const navigate =  useNavigate();
+
+  const {login} = useAuth();
    
 
   //form sybmit handler
@@ -17,14 +21,16 @@ function Login() {
 
         try {
 
-          const response = await axios.post('http://localhost:5000/api/auth/login', {
+          const response = await axios.post('http://localhost:8800/api/auth/login', {
             
             email,
             password
              });
 
              if (response.data.success) {
+                
                 localStorage.setItem('token', response.data.token);
+                login(response.data.user);
                 navigate('/');
              }
 
