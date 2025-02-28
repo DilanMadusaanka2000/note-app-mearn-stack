@@ -10,7 +10,8 @@ const router = express.Router();
 
 router.post('/register', register);
 router.post('/login', login);
-router.post('/verify', middleware, verify);
+//router.post('/verify', middleware, verify);
+router.get('/verify', middleware, verify);
 
 
 export default router;

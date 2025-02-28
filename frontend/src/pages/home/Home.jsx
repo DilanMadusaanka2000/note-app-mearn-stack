@@ -5,6 +5,8 @@ import NoteModel from '../../components/NoteModel';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
 import Notecard from '../../components/notecard/Notecard';
+import {toast} from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 function Home() {
   const [isModelOpen, setModelOpen] = useState(false);
@@ -28,6 +30,7 @@ function Home() {
     )
   }, [query, notes]);
 
+  //fetch all notes
 
   const fetchNotes = async () => {
     try {
@@ -56,6 +59,8 @@ function Home() {
     setCurrentNote(note);
     setModelOpen(true);
   }
+
+  //add note
 
   const addNote = async (title, description) => {
     try {
@@ -105,6 +110,8 @@ function Home() {
  }
 
 
+ //delete note
+
  const deleteNote = async(id)=>{
     try {
       
@@ -120,6 +127,7 @@ function Home() {
 
       if(response.data.success){
 
+        toast.success("note deleted successfully");
         fetchNotes();
       }
     } catch (error) {
@@ -131,16 +139,23 @@ function Home() {
   return (
     <div>
       <CustomNavbar setQuery={setQuery} />
-      <div>
-        {   notes.length > 0 ? (
-          notes.map(note => (
-            <Notecard key={note._id} note={note}
-            onEdit={onEdit} />  // Ensure each note has a unique key
-          ))
-        ) : (
-          <p>No notes available.</p>  // Optional message if no notes exist
-        )}
-      </div>
+      <div className="container mt-4">
+      <div className="row">
+  {filteredNotes && filteredNotes.length > 0 ? (
+    filteredNotes.map((note) => (
+      <Notecard
+        key={note._id}
+        note={note}
+        onEdit={onEdit}
+        deleteNote={deleteNote}
+      />
+    ))
+  ) : (
+    <p>No notes available.</p>
+  )}
+</div>
+
+</div>
 
       <button
         onClick={() => setModelOpen(true)}
