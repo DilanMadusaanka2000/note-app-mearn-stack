@@ -2,6 +2,7 @@
 
 import express from 'express';
 import authRouter from './routes/auth.js';
+import noteRouter from './routes/note.js';
 import dotent from "dotenv";
 import mongoose from "mongoose";
 import cookieParser from "cookie-parser";
@@ -44,6 +45,8 @@ app.use(express.json())
 
 
 app.use('/api/auth', authRouter);
+app.use('/api/note', noteRouter );
+
 
 
 app.listen(8800, () => {

@@ -1,41 +1,17 @@
 import React, { useState } from 'react';
 import './notemodel.css';
-import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
 
-
-function NoteModel({ onClose }) {
+function NoteModel({ closeModel, addNote }) {
   const [title, setTitle] = useState('');
   const [description, setDescription] = useState('');
-  const navigate =  useNavigate();
-
+  const navigate = useNavigate();
 
   const handleSubmit = async (e) => {
-
     e.preventDefault();
+    addNote(title, description);
 
-    try {
-
-      const response = await axios.post('http://localhost:8800/api/note/add', {
-        title,
-        description,
-        
-         });
-
-         console.log(response);
-         alert('User registered successfully');
-
-         navigate('/login');
-
-      
-    } catch (error) {
-
-      console.log(error);
-      
-    }
-
-}
-
+  };
 
   return (
     <div className="form-popup">
@@ -43,7 +19,7 @@ function NoteModel({ onClose }) {
         <div className="modal-content">
           <div className="modal-header">
             <h5 className="modal-title">Add New Note</h5>
-            <button type="button" className="btn-close" onClick={onClose}></button>
+            <button type="button" className="btn-close" onClick={closeModel}></button>
           </div>
           <div className="modal-body">
             <form onSubmit={handleSubmit}>
@@ -71,7 +47,7 @@ function NoteModel({ onClose }) {
               </div>
               <div className="d-flex justify-content-end">
                 <button type="submit" className="btn btn-primary me-2">Add Note</button>
-                <button type="button" className="btn btn-secondary" onClick={onClose}>
+                <button type="button" className="btn btn-secondary" onClick={closeModel}>
                   Cancel
                 </button>
               </div>
