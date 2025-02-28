@@ -8,9 +8,11 @@ import Notecard from '../../components/notecard/Notecard';
 
 function Home() {
   const [isModelOpen, setModelOpen] = useState(false);
+  const[filteredNotes, setFilteredNotes] = useState(false);
   const [notes, setNotes] = useState([]);
   const navigate = useNavigate();
   const [currentNote, setCurrentNote] = useState(null);
+  const [query, setQuery] = useState('');
 
   useEffect(() => {
   
@@ -18,10 +20,23 @@ function Home() {
     fetchNotes();  // Call the fetchNotes function
   }, []);  // Empty dependency array to run on component mount
 
+  useEffect(() => {
+    setFilteredNotes(
+      notes.filter((note) =>note.title.toLowerCase().includes(query.toLowerCase())||
+      note.description.toLowerCase().includes(query.toLowerCase())
+    )
+    )
+  }, [query, notes]);
+
 
   const fetchNotes = async () => {
     try {
-      const { data } = await axios.get('http://localhost:8800/api/note/all');
+      const { data } = await axios.get('http://localhost:8800/api/note/all',{
+
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem('token')}`
+        }
+      });
       setNotes(data);  // Set the notes state
       console.log(data);  // Log to the console for debugging
     } catch (error) {
@@ -62,11 +77,62 @@ function Home() {
     }
   };
 
+
+ //edit function
+  
+ const editNote = async (id ,title, description) => {
+    try {
+      const response = await axios.put(`http://localhost:8800/api/note/update/${id}`, {
+     
+        title,
+        description
+      }, {
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem('token')}`
+        }
+      });
+
+      console.log(response);
+      alert('Note updated successfully');
+      closeModel(); // Close the model after submission
+      fetchNotes();
+      
+    } catch (error) {
+
+      console.log(error);
+      
+    }
+ }
+
+
+ const deleteNote = async(id)=>{
+    try {
+      
+      const response = await axios.delete(
+        `http://localhost:8800/api/note/delete/${id}`,
+        {
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem('token')}`
+          }
+
+        }
+      );
+
+      if(response.data.success){
+
+        fetchNotes();
+      }
+    } catch (error) {
+      
+    }
+ }
+
+
   return (
     <div>
-      <CustomNavbar />
+      <CustomNavbar setQuery={setQuery} />
       <div>
-        {notes.length > 0 ? (
+        {   notes.length > 0 ? (
           notes.map(note => (
             <Notecard key={note._id} note={note}
             onEdit={onEdit} />  // Ensure each note has a unique key
@@ -86,7 +152,10 @@ function Home() {
 
       {isModelOpen && (
         <div className="overlay">
-          <NoteModel closeModel={closeModel} addNote={addNote} />
+          <NoteModel closeModel={closeModel} addNote={addNote}
+          currentNote={currentNote}
+          editNote ={editNote}
+          deleteNote = {deleteNote} />
         </div>
       )}
     </div>

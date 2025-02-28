@@ -1,6 +1,6 @@
 import React from 'react'
 import {FaEdit, FaTrash} from 'react-icons/fa';
-function Notecard({ note, onEdit }) {
+function Notecard({ note, onEdit, deleteNote }) {
   return (
     <div>
          <h2>
@@ -10,7 +10,7 @@ function Notecard({ note, onEdit }) {
          <p>{note.description}</p>
 
          <button onClick={()=>onEdit(note)}><FaEdit /></button>
-         <button>< FaTrash /></button>
+         <button onClick={()=>deleteNote(note._id)}>< FaTrash /></button>
     </div>
 
     

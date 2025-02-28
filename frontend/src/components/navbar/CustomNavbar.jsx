@@ -1,7 +1,12 @@
 import React from 'react';
 import {useAuth} from '../../context/ContextProvider'
-const CustomNavbar = ({username}) => {
+
+
+
+const CustomNavbar = ({username, setQuery}) => {
   const {user} = useAuth();
+
+  
 
 
   return (
@@ -22,7 +27,10 @@ const CustomNavbar = ({username}) => {
 
             <li>
             <form className="d-flex" onSubmit={(e) => e.preventDefault()}>
-            <input className="form-control me-2" type="search" placeholder="Search" aria-label="Search" />
+            <input className="form-control me-2" type="search" placeholder="Search" aria-label="Search"
+            
+            onChange={(e) => setQuery(e.target.value)}
+            />
             <button className="btn btn-outline-success" type="submit">Search</button>
           </form>
             </li>
